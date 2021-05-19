@@ -1,0 +1,58 @@
+Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sum to target.Each number in candidates may only be used once in the combination.
+#include<iostream>
+#include <vector>
+using namespace std;
+vector<vector<int> > final_result_set;
+void dfs_solution(vector<int> &input_set, vector<int>& temp_result_set, int key, int total_sum, int beg) 
+{
+	if (total_sum == key) 
+	{
+		final_result_set.push_back(temp_result_set);
+		return;
+    }
+    if (total_sum > key || beg == input_set.size()) 
+    	return;  
+	temp_result_set.push_back(input_set[beg]);
+ dfs_solution(input_set, temp_result_set, key, total_sum + input_set[beg], beg+1);
+    temp_result_set.pop_back();
+	int end = beg;
+	while(end+1<input_set.size() && input_set[end]==input_set[end+1]) end++;
+	dfs_solution(input_set, temp_result_set, key, total_sum, end+1);
+}
+vector<vector<int> > combinationSum_2_dfs_soluntion(vector<int>& input_set, int key) 
+{
+    vector<int> temp_result_set;
+    sort(input_set.begin(), input_set.end());
+    dfs_solution(input_set, temp_result_set, key, 0, 0);
+    return final_result_set;
+}
+int main()
+{
+    vector<int> input_set;
+    input_set.push_back(10);
+    input_set.push_back(1);
+    input_set.push_back(2);
+    input_set.push_back(7);
+    input_set.push_back(6);
+    input_set.push_back(1);
+    input_set.push_back(5);
+    int key = 8;
+    vector<vector<int> > final_set =  combinationSum_2_dfs_soluntion(input_set, key);
+    if (final_set.size() == 0)
+    {
+        cout << "No possible combinations found";
+        return 0;
+    }
+    for (int i = 0; i < final_set.size(); i++)
+    {
+        if (final_set[i].size() > 0)
+        {
+            cout << " ( ";
+            for (int j = 0; j < final_set[i].size(); j++)
+                cout << final_set[i][j] << " ";
+            cout << ")";
+        }
+        cout<<endl;
+    }
+	return 0;
+}
